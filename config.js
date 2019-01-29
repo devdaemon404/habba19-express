@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const util = require('util');
 
 const dbName = 'habba19';
 
@@ -23,9 +24,8 @@ const config = {
     }
 }
 
-config.createConnection = env => {
-    config.conn = mysql.createConnection(config[env].database);
-    config.conn.query('use habba19');
-}
+config.conn = mysql.createPool(config[process.env.NODE_ENV].database);
+config.conn.query = util.promisify(config.conn.query);
+config.conn.query('USE habba19');
 
 module.exports = config;

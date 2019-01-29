@@ -11,11 +11,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const controllers = require('./controllers');
+const formidable = require('express-formidable');
 
-const app = express();
 const config = require('./config.js');
+const app = express();
 const port = config[app.get('env')].port;
-config.createConnection(app.get('env'));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -24,6 +24,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(formidable());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/apl', controllers.aplRouter);
