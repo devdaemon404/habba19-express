@@ -38,5 +38,4 @@ app.use('/holy', controllers.holympicsRouter);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
-    
 })
