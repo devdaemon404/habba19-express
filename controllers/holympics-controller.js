@@ -14,11 +14,13 @@ const express = require('express');
 const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
 const { conn } = require('../config');
+const validator = require('express-validation');
+const { authValidator } = require('../validators');
 
 
-router.get('/getscore',async (req,res) => {
+router.get('/getscore', async (req,res) => {
     
-    const stmt = 'SELECT name,points FROM COLLEGE ORDER BY name'
+    const stmt = 'SELECT * FROM COLLEGE ORDER BY points DESC';
     
     try {
         const results = await conn.query(stmt);
@@ -31,8 +33,22 @@ router.get('/getscore',async (req,res) => {
 
 })
 
+router.get('/getcol', async (req,res) => {
+    
+    const stmt = 'SELECT name FROM COLLEGE ORDER BY name';
+    
+    try {
+        const results = await conn.query(stmt);
+        res.send(new Response().withData(results).noError());
+    }
+    catch(err){
+        console.log(err);
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
 
-router.post('/addpoints', async (req,res) => {
+})
+
+router.post('/addpoints', validator(authValidator.addingPoints), async (req,res) => {
 
     const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points + ? WHERE name = ?';
@@ -47,7 +63,7 @@ router.post('/addpoints', async (req,res) => {
     }
 })
 
-router.post('/subpoints', async (req,res) => {
+router.post('/subpoints', validator(authValidator.subtractingPoints), async (req,res) => {
 
     const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points - ? WHERE name = ?';
