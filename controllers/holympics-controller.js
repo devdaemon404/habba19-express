@@ -15,7 +15,7 @@ const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
 const { conn } = require('../config');
 const validator = require('express-validation');
-const { authValidator } = require('../validators');
+const { holympicsValidator } = require('../validators');
 
 
 router.get('/getscore', async (req,res) => {
@@ -48,7 +48,7 @@ router.get('/getcol', async (req,res) => {
 
 })
 
-router.post('/addpoints', validator(authValidator.addingPoints), async (req,res) => {
+router.post('/addpoints', validator(holympicsValidator.addingPoints), async (req,res) => {
 
     const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points + ? WHERE name = ?';
@@ -63,7 +63,7 @@ router.post('/addpoints', validator(authValidator.addingPoints), async (req,res)
     }
 })
 
-router.post('/subpoints', validator(authValidator.subtractingPoints), async (req,res) => {
+router.post('/subpoints', validator(holympicsValidator.subtractingPoints), async (req,res) => {
 
     const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points - ? WHERE name = ?';

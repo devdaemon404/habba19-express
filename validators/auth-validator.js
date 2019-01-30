@@ -31,17 +31,5 @@ module.exports = {
             email: string.required(),
             password: string.required()
         }
-    },
-    addingPoints: {
-        fields: {
-            points: string.required(),
-            name: string.required()
-        }
-    },
-    subtractingPoints: {
-        fields: {
-            points: string.required(),
-            name: string.required()
-        }
     }
 }
