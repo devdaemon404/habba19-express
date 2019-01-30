@@ -34,7 +34,7 @@ router.get('/getscore',async (req,res) => {
 
 router.post('/addpoints', async (req,res) => {
 
-    const { points,name } = req.fields;
+    const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points + ? WHERE name = ?';
 
     try {
@@ -49,7 +49,7 @@ router.post('/addpoints', async (req,res) => {
 
 router.post('/subpoints', async (req,res) => {
 
-    const { points,name } = req.fields;
+    const { points, name } = req.fields;
     const stmt = 'UPDATE COLLEGE SET points = points - ? WHERE name = ?';
 
     try {
