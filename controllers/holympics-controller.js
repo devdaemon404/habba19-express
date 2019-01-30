@@ -15,7 +15,6 @@ const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
 const { conn } = require('../config');
 
-// INSERT ROUTES HERE
 
 router.get('/getscore',async (req,res) => {
     
