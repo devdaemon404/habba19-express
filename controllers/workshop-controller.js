@@ -20,7 +20,6 @@ const { conn } = require('../config');
 const { workshopValidator } = require('../validators');
 const validator = require('express-validation');
 
-const router = express.Router();
 
 /**
  * NEW EVENT
@@ -65,3 +64,5 @@ router.post('/update');
  * Register a user to a workshop
  */
 router.post('/user/register');
+
+module.exports = router;
