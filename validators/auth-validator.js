@@ -1,35 +1,36 @@
 const joi = require('joi');
 
 const string = joi.string();
+const reqString = string.required();
 
 module.exports = {
     userSignup: {
         fields: {
-            email: string.required(),
-            name: string.required(),
-            password: string.required(),
-            phone_number: string.required(),
-            college_name: string.required()
+            email: reqString,
+            name: reqString,
+            password: reqString,
+            phone_number: reqString,
+            college_name: reqString
         }
     },
     userLogin: {
         fields: {
-            email: string.required(),
-            password: string.required()
+            email: reqString,
+            password: reqString
         }
     },
     organizerSignup: {
         fields: {
-            name: string.required(),
-            email: string.required(),
-            password: string.required(),
-            phone_number: string.required(),
+            name: reqString,
+            email: reqString,
+            password: reqString,
+            phone_number: reqString,
         }
     },
     organizerLogin: {
         fields: {
-            email: string.required(),
-            password: string.required()
+            email: reqString,
+            password: reqString
         }
     }
 }

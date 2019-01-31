@@ -21,7 +21,7 @@ class Response {
 const ERR_CODE = {
     ALREADY_REGISTERED: {
         code: 501,
-        message: 'User already registered'
+        message: 'Already registered'
     },
     INVALID_CATEGORY: {
         code: 603,
@@ -38,7 +38,7 @@ const ERR_CODE = {
     },
     INVALID_USR: {
         code: 701,
-        message: 'Invalid username/password'
+        message: 'Invalid username/password. Login again'
     },
     INVALID_PWD: {
         code: 702,
@@ -55,6 +55,10 @@ const ERR_CODE = {
     DB_READ: {
         code: 802,
         message: 'Error reading from database'
+    },
+    CREATE_EVENT: {
+        code: 999,
+        message: 'No event under organizer. Create a new event'
     }
 };
 module.exports = {
