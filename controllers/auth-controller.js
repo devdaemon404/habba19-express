@@ -30,7 +30,9 @@ const bcrypt = require('bcrypt');
  *  email, password, phone_number, college_name
  * }
  */
+    
 router.post('/user/signup', validator(authValidator.userSignup), async (req, res) => {
+
     const { email, password, phone_number, college_name, name } = req.fields;
     const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
     const id = uniqid('h19-');
