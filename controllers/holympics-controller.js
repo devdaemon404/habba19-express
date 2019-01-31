@@ -33,7 +33,7 @@ router.get('/getscore', async (req,res) => {
 
 })
 
-router.get('/getcol', async (req,res) => {
+router.get('/colleges', async (req,res) => {
     
     const stmt = 'SELECT name FROM COLLEGE ORDER BY name';
     
