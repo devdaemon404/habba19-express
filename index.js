@@ -33,6 +33,7 @@ app.use('/afl', controllers.aflRouter);
 app.use('/events', controllers.eventRouter);
 app.use('/auth', controllers.authRouter);
 app.use('/holy', controllers.holympicsRouter);
+app.use('/workshop', controllers.workshopRouter);
 
 app.use(function (err, req, res, next) {
     // specific for validation errors

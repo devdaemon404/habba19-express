@@ -3,11 +3,13 @@ const aplRouter = require('./apl-controller');
 const authRouter = require('./auth-controller');
 const eventRouter = require('./event-controller');
 const holympicsRouter = require('./holympics-controller');
+const workshopRouter = require('./workshop-controller');
 
 module.exports = {
     aflRouter,
     aplRouter,
     authRouter,
     eventRouter,
-    holympicsRouter
+    holympicsRouter,
+    workshopRouter
 }
