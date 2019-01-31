@@ -12,6 +12,7 @@
  * - GET all registered events for a user
  * 
  * - GET all registrations for an organizer's event
+ * 
  * - SEND notifications to the registered user from the organizer
  * 
  * - Handle payments (!!!)
@@ -36,7 +37,7 @@ const validator = require('express-validation');
  *  organizer_id
  * }
  * 
- * Add a new event to the event list under the requesting organizer
+ * Add a new event under the requesting organizer
  * 
  */
 router.post('/new', validator(eventValidator.newEvent), async (req, res) => {
@@ -233,6 +234,16 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
     }
 });
 
+/**
+ * NOTIFICATION
+ * fileds: {
+ *  title, message
+ * }
+ * headaers: {
+ *  organizer_id
+ * }
+ * Register a notification for the event under the requesting organizer
+ */
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
     const { title, message } = req.fields;
     const { organizer_id } = req.headers;
