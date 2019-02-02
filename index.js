@@ -10,6 +10,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const controllers = require('./controllers');
 const formidable = require('express-formidable');
 const ev = require('express-validation');
@@ -22,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+app.use(logger('combined', {stream: fs.createWriteStream('./access.log', {flags: 'a'})}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -33,7 +35,7 @@ app.use('/afl', controllers.aflRouter);
 app.use('/events', controllers.eventRouter);
 app.use('/auth', controllers.authRouter);
 app.use('/holy', controllers.holympicsRouter);
-app.use('/workshop', controllers.workshopRouter);
+app.use('/workshop', controllers.workshopRouter)
 
 app.use(function (err, req, res, next) {
     // specific for validation errors
@@ -46,7 +48,6 @@ app.use(function (err, req, res, next) {
         return res.status(500);
     }
 });
-
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
