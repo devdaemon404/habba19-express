@@ -1,18 +1,18 @@
 const joi = require('joi');
 
 const string = joi.string();
+const reqString = string.required();
+
 
 module.exports = {
-    addingPoints: {
+    points: {
         fields: {
-            points: string.required(),
-            name: string.required()
-        }
-    },
-    subtractingPoints: {
-        fields: {
-            points: string.required(),
-            name: string.required()
+            points_value: reqString,
+            description: reqString,
+            college_id: reqString
+        },
+        headers: {
+             organizer_id: reqString
         }
     }
 }
