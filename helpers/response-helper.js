@@ -59,6 +59,10 @@ const ERR_CODE = {
     CREATE_EVENT: {
         code: 999,
         message: 'No event under organizer. Create a new event'
+    },
+    CREATE_WORSHOP: {
+        code: 993,
+        message: 'No workshop under organizer. Create a new workshop'
     }
 };
 module.exports = {

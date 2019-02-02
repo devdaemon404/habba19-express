@@ -37,6 +37,7 @@ app.use('/auth', controllers.authRouter);
 app.use('/holy', controllers.holympicsRouter);
 app.use('/workshop', controllers.workshopRouter)
 
+
 app.use(function (err, req, res, next) {
     // specific for validation errors
     if (err instanceof ev.ValidationError) return res.send(new Response().withError(ERR_CODE.VALIDATION_ERR));
