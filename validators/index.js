@@ -8,5 +8,4 @@ module.exports = {
     holympicsValidator,
     eventValidator,
     workshopValidator
-
 }

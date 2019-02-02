@@ -1,3 +1,18 @@
+/**
+ * EVENT CONTROLLER
+ * 
+ * Contains the routes for handling all event related controls
+ * This includes the following
+ * 
+ * - CREATE a new workshop
+ * 
+ * - UPDATE existing workshops
+ * 
+ * - REGISTER a user to a workshop
+ * 
+ * 
+ */
+
 const express = require('express');
 const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
@@ -6,6 +21,19 @@ const { workshopValidator } = require('../validators');
 const validator = require('express-validation');
 
 
+/**
+ * NEW WORKSHOP
+ * 
+ * fields: {
+ *  name, description, venue, date, fee
+ * }
+ * headers: {
+ *  organizer_id
+ * }
+ * 
+ * Add a new workshop under the requesting organizer
+ * 
+ */
 router.post('/new', validator(workshopValidator.newWorkshop), async (req, res) => {
     const { name, description, time, venue, date, fee } = req.fields;
     const { organizer_id } = req.headers;
@@ -69,7 +97,19 @@ router.get('/details', validator(workshopValidator.workshopDetails), async (req,
 
 });
 
-
+/**
+ * UPDATE WORKSHOP
+ * 
+ * fields: {
+ *  name, description, venue, date, fee
+ * }
+ * headers: {
+ *  organizer_id
+ * }
+ * 
+ * Update the existing workshop under the requesting organizer
+ * 
+ */
 router.post('/update', validator(workshopValidator.newWorkshop), async (req, res) => {
     const { name, description, venue, date, fee } = req.fields;
     const { organizer_id } = req.headers;
@@ -90,7 +130,18 @@ router.post('/update', validator(workshopValidator.newWorkshop), async (req, res
     }
 });
 
-
+/**
+ * REGISTER A USER TO A WORKSHOP
+ * 
+ * fields: {
+ *  workshop_id
+ * }
+ * headers: {
+ *  user_id
+ * }
+ * 
+ * Register a user to a workshop
+ */
 router.post('/user/register', validator(workshopValidator.registerToWorkshop), async (req, res) => {
     const { workshop_id } = req.fields;
     const { user_id } = req.headers;
@@ -140,7 +191,6 @@ router.get('/user/details', validator(workshopValidator.userDetails), async (req
         res.send(new Response().withError(ERR_CODE.DB_READ));
     }
 });
-
 
 
 module.exports = router;
