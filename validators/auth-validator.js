@@ -15,7 +15,7 @@ module.exports = {
     },
     userLogin: {
         fields: {
-            email: reqString,
+            organizer_id: reqString,
             password: reqString
         }
     },

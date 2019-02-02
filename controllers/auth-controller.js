@@ -122,12 +122,12 @@ router.post('/organizer/signup', validator(authValidator.organizerSignup), async
  * Verify login and change id's on each login
  */
 router.post('/organizer/login', validator(authValidator.userLogin), async (req, res) => {
-    const { email, password } = req.fields;
+    const { organizer_id, password } = req.fields;
 
-    const stmt = 'SELECT password, organizer_id FROM ORGANIZER WHERE email = ?';
+    const stmt = 'SELECT password, organizer_id FROM ORGANIZER WHERE organizer_id = ?';
 
     try {
-        const result = await conn.query(stmt, [email]);
+        const result = await conn.query(stmt, [organizer_id]);
 
         if (await bcrypt.compare(password, result[0]['password'])) {
             // Authenticated successfully, change the id
