@@ -5,7 +5,7 @@ const reqString = string.required();
 
 module.exports = {
     newWorkshop: {
-        fields: {
+        body: {
             name: reqString,
             description: reqString,
             date: reqString,
@@ -26,7 +26,7 @@ module.exports = {
         headers: {
             user_id: reqString
         },
-        fields: {
+        body: {
             workshop_id: reqString
         }
     },

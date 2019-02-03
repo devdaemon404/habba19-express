@@ -35,7 +35,7 @@ const validator = require('express-validation');
  * 
  */
 router.post('/new', validator(workshopValidator.newWorkshop), async (req, res) => {
-    const { name, description, time, venue, date, fee } = req.fields;
+    const { name, description, time, venue, date, fee } = req.body;
     const { organizer_id } = req.headers;
 
     const stmt1 = 'SELECT COUNT(*) AS count FROM WORKSHOP WHERE organizer_id = ?';
@@ -111,7 +111,7 @@ router.get('/details', validator(workshopValidator.workshopDetails), async (req,
  * 
  */
 router.post('/update', validator(workshopValidator.newWorkshop), async (req, res) => {
-    const { name, description, venue, date, fee } = req.fields;
+    const { name, description, venue, date, fee } = req.body;
     const { organizer_id } = req.headers;
 
     const stmt = 'UPDATE WORKSHOP SET name = ?, description = ?, time = ?, venue = ?, date = ?, fee = ? WHERE organizer_id = ?';
@@ -143,7 +143,7 @@ router.post('/update', validator(workshopValidator.newWorkshop), async (req, res
  * Register a user to a workshop
  */
 router.post('/user/register', validator(workshopValidator.registerToWorkshop), async (req, res) => {
-    const { workshop_id } = req.fields;
+    const { workshop_id } = req.body;
     const { user_id } = req.headers;
 
     const stmt = 'INSERT INTO WORKSHOP_REG (user_id, workshop_id, payment_made, registration_time) VALUES (?, ?, ?, ?)';

@@ -50,7 +50,7 @@ router.get('/colleges', async (req,res) => {
 
 router.post('/addpoints', validator(holympicsValidator.addingPoints), async (req,res) => {
 
-    const { points, name } = req.fields;
+    const { points, name } = req.body;
     const stmt = 'UPDATE COLLEGE SET points = points + ? WHERE name = ?';
 
     try {
@@ -65,7 +65,7 @@ router.post('/addpoints', validator(holympicsValidator.addingPoints), async (req
 
 router.post('/subpoints', validator(holympicsValidator.subtractingPoints), async (req,res) => {
 
-    const { points, name } = req.fields;
+    const { points, name } = req.body;
     const stmt = 'UPDATE COLLEGE SET points = points - ? WHERE name = ?';
 
     try {

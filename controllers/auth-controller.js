@@ -26,14 +26,14 @@ const bcrypt = require('bcrypt');
  * USER SIGNUP
  * 
  * form_data
- * req.fields = {
+ * req.body = {
  *  email, password, phone_number, college_name
  * }
  */
     
 router.post('/user/signup', validator(authValidator.userSignup), async (req, res) => {
 
-    const { email, password, phone_number, college_name, name } = req.fields;
+    const { email, password, phone_number, college_name, name } = req.body;
     const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
     const id = uniqid('h19-');
     try {
@@ -52,14 +52,14 @@ router.post('/user/signup', validator(authValidator.userSignup), async (req, res
  * USER LOGIN
  * 
  * form_data
- * req.fields = {
+ * req.body = {
  *  email, password
  * }
  * 
  * Verify login and change id's on each login
  */
 router.post('/user/login', validator(authValidator.userLogin), async (req, res) => {
-    const { email, password } = req.fields;
+    const { email, password } = req.body;
 
     const stmt = 'SELECT password, user_id FROM USER WHERE email = ?';
 
@@ -90,12 +90,12 @@ router.post('/user/login', validator(authValidator.userLogin), async (req, res) 
  * ORGANIZER SIGNUP
  * 
  * form_data
- * req.fields = {
+ * req.body = {
  *  email, password, phone_number, name
  * }
  */
 router.post('/organizer/signup', validator(authValidator.organizerSignup), async (req, res) => {
-    const { email, password, phone_number, name } = req.fields;
+    const { email, password, phone_number, name } = req.body;
     const stmt = 'INSERT INTO ORGANIZER ( email, password, phone_number, name) VALUES (?, ?, ?, ?)';
     const stmt2 = 'SELECT organizer_id FROM ORGANIZER where email = ?';
     try {
@@ -115,14 +115,14 @@ router.post('/organizer/signup', validator(authValidator.organizerSignup), async
  * ORGANIZER LOGIN
  * 
  * form_data
- * req.fields = {
+ * req.body = {
  *  email, password
  * }
  * 
  * Verify login and change id's on each login
  */
 router.post('/organizer/login', validator(authValidator.userLogin), async (req, res) => {
-    const { organizer_id, password } = req.fields;
+    const { organizer_id, password } = req.body;
 
     const stmt = 'SELECT password, organizer_id FROM ORGANIZER WHERE organizer_id = ?';
 

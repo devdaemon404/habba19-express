@@ -4,13 +4,13 @@ const string = joi.string();
 
 module.exports = {
     addingPoints: {
-        fields: {
+        body: {
             points: string.required(),
             name: string.required()
         }
     },
     subtractingPoints: {
-        fields: {
+        body: {
             points: string.required(),
             name: string.required()
         }

@@ -5,7 +5,7 @@ const reqString = string.required();
 
 module.exports = {
     newEvent: {
-        fields: {
+        body: {
             name: reqString,
             description: reqString,
             rules: reqString,
@@ -27,7 +27,7 @@ module.exports = {
         headers: {
             user_id: reqString
         },
-        fields: {
+        body: {
             event_id: reqString
         }
     },
@@ -37,7 +37,7 @@ module.exports = {
         }
     },
     notification: {
-        fields: {
+        body: {
             title: reqString,
             message: reqString
         },

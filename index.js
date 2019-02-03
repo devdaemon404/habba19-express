@@ -37,17 +37,15 @@ app.use('/auth', controllers.authRouter);
 app.use('/holy', controllers.holympicsRouter);
 app.use('/workshop', controllers.workshopRouter)
 
-
 app.use(function (err, req, res, next) {
+    console.log(req.body);
     // specific for validation errors
     if (err instanceof ev.ValidationError) return res.send(new Response().withError(ERR_CODE.VALIDATION_ERR));
-
     // other type of errors, it *might* also be a Runtime Error
-    if (process.env.NODE_ENV !== 'production') {
-        return res.status(500).send(err.stack);
-    } else {
-        return res.status(500);
-    }
+    res.send({
+        success: false,
+        error: 'FTS'
+    })
 });
 
 app.listen(port, () => {
