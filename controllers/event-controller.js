@@ -100,7 +100,7 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
         'WHERE EV.organizer_id = ?';
 
     const stmt3 = '' +
-        'SELECT U.name, U.email, E.registration_time, U.college_name, U.phone_number ' +
+        'SELECT U.name, U.email, W.registration_time, U.college_name, U.phone_number ' +
         'FROM USER as U ' +
         'INNER JOIN WORKSHOP_REG as W ' +
         'ON U.user_id = W.user_id ' +
