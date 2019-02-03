@@ -1,5 +1,5 @@
 /**
- * Starting point of out application
+ * Starting point of our application
  * Habba 2019
  */
 
@@ -37,6 +37,7 @@ app.use('/workshop', controllers.workshopRouter)
 
 app.use(function (err, req, res, next) {
     console.log(req.body);
+    console.log(err);
     // specific for validation errors
     if (err instanceof ev.ValidationError) return res.send(new Response().withError(ERR_CODE.VALIDATION_ERR));
     // other type of errors, it *might* also be a Runtime Error
