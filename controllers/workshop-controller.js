@@ -51,7 +51,7 @@ router.post('/new', validator(workshopValidator.newWorkshop), async (req, res) =
     }
 
     try {
-        await conn.query(stmt2, [name, description, new Date(), venue, date, fee, organizer_id]);
+        await conn.query(stmt2, [name, description, time, venue, date, fee, organizer_id]);
         res.send(new Response().noError())
     } catch (e) {
         console.log(e)

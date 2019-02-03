@@ -77,7 +77,7 @@ router.post('/new', [validator(eventValidator.newEvent), updateVersion], async (
  * 
  * Returns the details of the event being organized by the requesting organizer
  * Also returns the details of the currently registered participants
- * For Events and Workshops
+ * For Events
  * 
  */
 router.get('/details', validator(eventValidator.eventDetails), async (req, res) => {
@@ -99,14 +99,6 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
         'ON E.event_id = EV.event_id ' +
         'WHERE EV.organizer_id = ?';
 
-    const stmt3 = '' +
-        'SELECT U.name, U.email, W.registration_time, U.college_name, U.phone_number ' +
-        'FROM USER as U ' +
-        'INNER JOIN WORKSHOP_REG as W ' +
-        'ON U.user_id = W.user_id ' +
-        'INNER JOIN WORKSHOP as WS ' +
-        'ON W.workshop_id = WS.workshop_id ' +
-        'WHERE WS.organizer_id = ?';
 
     try {
         const results = await conn.query(stmt1, [organizer_id]);
@@ -119,8 +111,6 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
         obj.details = results[0];
         const results2 = await conn.query(stmt2, [organizer_id]);
         obj.eventRegistration = results2;
-        const results3 = await conn.query(stmt3, [organizer_id]);
-        obj.workshopRegistrations = results3;
         res.send(new Response().withData(obj).noError());
 
     } catch (e) {
