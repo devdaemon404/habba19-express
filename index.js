@@ -12,7 +12,6 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const controllers = require('./controllers');
-const formidable = require('express-formidable');
 const ev = require('express-validation');
 const { Response, ERR_CODE } = require('./helpers/response-helper');
 const config = require('./config.js');
@@ -23,11 +22,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
-app.use(logger('combined', {stream: fs.createWriteStream('./access.log', {flags: 'a'})}))
+app.use(logger('combined', { stream: fs.createWriteStream('./access.log', { flags: 'a' }) }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(formidable());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/apl', controllers.aplRouter);
@@ -42,10 +40,11 @@ app.use(function (err, req, res, next) {
     // specific for validation errors
     if (err instanceof ev.ValidationError) return res.send(new Response().withError(ERR_CODE.VALIDATION_ERR));
     // other type of errors, it *might* also be a Runtime Error
-    res.send({
-        success: false,
-        error: 'FTS'
-    })
+    if (process.env.NODE_ENV !== 'production') {
+        return res.status(500).send(err.stack);
+    } else {
+        return res.status(500);
+    }
 });
 
 app.listen(port, () => {
