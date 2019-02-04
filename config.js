@@ -26,6 +26,12 @@ const config = {
 
 config.conn = mysql.createPool(config[process.env.NODE_ENV].database);
 config.conn.query = util.promisify(config.conn.query);
-config.conn.query('USE habba19');
-
+config.initDB = async () => {
+    try {
+        await config.conn.query('USE habba19');
+        console.log('db initialized')    
+    } catch (e) {
+        console.log(e)
+    }
+}
 module.exports = config;
