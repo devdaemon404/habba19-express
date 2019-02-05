@@ -10,7 +10,7 @@ const config = {
             host: "localhost",
             user: "root",
             password: "password",
-            db: dbName
+            database: dbName
         }
     },
     "production": {
