@@ -10,7 +10,7 @@ const config = {
             host: "localhost",
             user: "root",
             password: "password",
-            db: dbName
+            database: dbName
         }
     },
     "production": {
@@ -19,13 +19,19 @@ const config = {
             host: process.env.DB_HOST,
             user: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
-            db: dbName
+            database: dbName
         }
     }
 }
 
 config.conn = mysql.createPool(config[process.env.NODE_ENV].database);
 config.conn.query = util.promisify(config.conn.query);
-config.conn.query('USE habba19');
-
+config.initDB = async () => {
+    try {
+        await config.conn.query('USE habba19');
+        console.log('db initialized')
+    } catch (e) {
+        console.log(e)
+    }
+}
 module.exports = config;
