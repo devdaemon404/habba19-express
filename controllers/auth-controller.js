@@ -99,7 +99,7 @@ router.post('/organizer/signup', validator(authValidator.organizerSignup), async
     const stmt = 'INSERT INTO ORGANIZER ( email, password, phone_number, name) VALUES (?, ?, ?, ?)';
     const stmt2 = 'SELECT organizer_id FROM ORGANIZER where email = ?';
     try {
-        const hashedPwd = await bcrypt.hash(password, 2);
+        const hashedPwd = password;
         await conn.query(stmt, [email, hashedPwd, phone_number, name]);
         const result = await conn.query(stmt2, [email]);
         res.send(new Response().withToken(result[0]['organizer_id']).noError());
@@ -129,11 +129,9 @@ router.post('/organizer/login', validator(authValidator.userLogin), async (req, 
     try {
         const result = await conn.query(stmt, [organizer_id]);
 
-        if (await bcrypt.compare(password, result[0]['password'])) {
             // Authenticated successfully, change the id
             res.send(new Response().withToken(result[0]['organizer_id']).noError());
             return;
-        }
         // Invalid password condition
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
     } catch (err) {

@@ -338,7 +338,7 @@ router.post('/notification', validator(eventValidator.notification), async (req,
         res.send(new Response().noError());
     } catch (e) {
         console.log(e);
-        res.send(new Response().withError(ERR_CODE.DB_WRITE));
+        res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }
 });
 
@@ -351,6 +351,8 @@ router.post('/notification', validator(eventValidator.notification), async (req,
 router.get('/master_fetch', async (req, res) => {
 
     res.send("Naah bruv");
+
+        // being implemented by Bharat.
 });
 
 /**
