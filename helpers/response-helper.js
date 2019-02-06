@@ -39,7 +39,7 @@ const ERR_CODE = {
     INVALID_USR: {
         code: 701,
         message: 'Invalid username/password. Login again'
-    },
+    },   
     INVALID_PWD: {
         code: 702,
         message: 'Invalid username/password'
@@ -47,6 +47,10 @@ const ERR_CODE = {
     USER_EXISTS: {
         code: 703,
         message: 'User already exists with the username'
+    },
+    INVALID_ORG: {
+        code: 704,
+        message: 'Invalid organizer, contact admin'
     },
     DB_WRITE: {
         code: 801,
