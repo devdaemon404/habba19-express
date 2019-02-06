@@ -63,6 +63,10 @@ const ERR_CODE = {
     CREATE_WORSHOP: {
         code: 993,
         message: 'No workshop under organizer. Create a new workshop'
+    },
+    NOTIFICATION_FAILED: {
+        code: 401,
+        message: 'Notification did not send due to an internal error'
     }
 };
 module.exports = {
