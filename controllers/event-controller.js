@@ -333,7 +333,7 @@ router.post('/notification', validator(eventValidator.notification), async (req,
             },
             topic: topic
         };
-        const result = await admin.messaging().send(nmessage);
+        const nresult = await admin.messaging().send(nmessage);
         await conn.query(stmt2, [event_id, title, message, new Date()]);
         res.send(new Response().noError());
     } catch (e) {
