@@ -1,18 +1,18 @@
 const joi = require('joi');
 
 const string = joi.string();
-
+const reqString= string.required();
 module.exports = {
     addingPoints: {
         body: {
-            points: string.required(),
-            name: string.required()
+            points: reqString,
+            name: reqString
         }
     },
     subtractingPoints: {
         body: {
-            points: string.required(),
-            name: string.required()
+            points: reqString,
+            name: reqString
         }
     }
 }
