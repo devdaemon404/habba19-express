@@ -298,19 +298,15 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
 
 /**
  * NOTIFICATION
- * fileds: {
+ * feilds: {
  *  title, message
  * }
- * headaers: {
+ * headers: {
  *  organizer_id
  * }
- * Register a notification for the event under the requesting organizer
+ * Register a notification for the event under the requesting organizer and getting his/her event's ID.
  */
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
-    
-
-    // See documentation on defining a message payload.
-    
     const stmt1 = 'SELECT event_id' +
         'FROM EVENT' +
         'WHERE organizer_id= ? ';
