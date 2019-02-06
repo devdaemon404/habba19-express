@@ -307,8 +307,16 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
  * Register a notification for the event under the requesting organizer and getting his/her event's ID.
  */
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
-    const stmt1 = 'SELECT event_id' +
-        'FROM EVENT' +
+    const {
+        title,
+        message
+    } = req.body;
+    const {
+        organizer_id
+    } = req.headers;
+
+    const stmt1 = 'SELECT event_id ' +
+        'FROM EVENT ' +
         'WHERE organizer_id= ? ';
     const stmt2 = '' +
         'INSERT INTO NOTIFICATION (event_id, title, message, sent_date) VALUES (?,?,?,?) '
@@ -318,22 +326,14 @@ router.post('/notification', validator(eventValidator.notification), async (req,
         const result = await conn.query(stmt1, [organizer_id]);
         const event_id = result[0].event_id;
         const topic = event_id;
-        const {
-            title,
-            message
-        } = req.body;
-        const {
-            organizer_id
-        } = req.headers;
-        
+
         const nmessage = {
             notification: {
                 title: title,
                 body: message
             },
-            topic: topic
         };
-        const nresult = await admin.messaging().send(nmessage);
+        const nresult = await admin.messaging().sendToTopic(event_id.toString(), nmessage);
         await conn.query(stmt2, [event_id, title, message, new Date()]);
         res.send(new Response().noError());
     } catch (e) {
@@ -352,7 +352,7 @@ router.get('/master_fetch', async (req, res) => {
 
     res.send("Naah bruv");
 
-        // being implemented by Bharat.
+    // being implemented by Bharat.
 });
 
 /**
