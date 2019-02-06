@@ -28,7 +28,8 @@ module.exports = {
             user_id: reqString
         },
         body: {
-            event_id: reqString
+            event_id: reqString,
+            device_id: reqString
         }
     },
     userDetails: {
