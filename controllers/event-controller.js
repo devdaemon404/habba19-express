@@ -326,14 +326,14 @@ router.post('/notification', validator(eventValidator.notification), async (req,
             organizer_id
         } = req.headers;
         
-        const message = {
+        const nmessage = {
             notification: {
                 title: title,
                 body: message
             },
             topic: topic
         };
-        const result = await admin.messaging().send(message);
+        const result = await admin.messaging().send(nmessage);
         await conn.query(stmt2, [event_id, title, message, new Date()]);
         res.send(new Response().noError());
     } catch (e) {
