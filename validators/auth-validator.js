@@ -5,7 +5,7 @@ const reqString = string.required();
 
 module.exports = {
     userSignup: {
-        fields: {
+        body: {
             email: reqString,
             name: reqString,
             password: reqString,
@@ -14,13 +14,13 @@ module.exports = {
         }
     },
     userLogin: {
-        fields: {
+        body: {
             organizer_id: reqString,
             password: reqString
         }
     },
     organizerSignup: {
-        fields: {
+        body: {
             name: reqString,
             email: reqString,
             password: reqString,
@@ -28,7 +28,7 @@ module.exports = {
         }
     },
     organizerLogin: {
-        fields: {
+        body: {
             email: reqString,
             password: reqString
         }

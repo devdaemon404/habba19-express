@@ -42,7 +42,7 @@ const { updateVersion } = require('../middleware');
  * 
  */
 router.post('/new', [validator(eventValidator.newEvent), updateVersion], async (req, res) => {
-    const { name, description, rules, venue, date, fee, category_id } = req.fields;
+    const { name, description, rules, venue, date, fee, category_id } = req.body;
     const { organizer_id } = req.headers;
 
     const stmt1 = 'SELECT COUNT(*) AS count FROM EVENT WHERE organizer_id = ?';
@@ -77,7 +77,7 @@ router.post('/new', [validator(eventValidator.newEvent), updateVersion], async (
  * 
  * Returns the details of the event being organized by the requesting organizer
  * Also returns the details of the currently registered participants
- * For Events and Workshops
+ * For Events
  * 
  */
 router.get('/details', validator(eventValidator.eventDetails), async (req, res) => {
@@ -99,14 +99,6 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
         'ON E.event_id = EV.event_id ' +
         'WHERE EV.organizer_id = ?';
 
-    const stmt3 = '' +
-        'SELECT U.name, U.email, E.registration_time, U.college_name, U.phone_number ' +
-        'FROM USER as U ' +
-        'INNER JOIN WORKSHOP_REG as W ' +
-        'ON U.user_id = W.user_id ' +
-        'INNER JOIN WORKSHOP as WS ' +
-        'ON W.workshop_id = WS.workshop_id ' +
-        'WHERE WS.organizer_id = ?';
 
     try {
         const results = await conn.query(stmt1, [organizer_id]);
@@ -119,8 +111,6 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
         obj.details = results[0];
         const results2 = await conn.query(stmt2, [organizer_id]);
         obj.eventRegistration = results2;
-        const results3 = await conn.query(stmt3, [organizer_id]);
-        obj.workshopRegistrations = results3;
         res.send(new Response().withData(obj).noError());
 
     } catch (e) {
@@ -144,7 +134,7 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
  * 
  */
 router.post('/update', [validator(eventValidator.newEvent), updateVersion], async (req, res) => {
-    const { name, description, rules, venue, date, fee, category_id } = req.fields;
+    const { name, description, rules, venue, date, fee, category_id } = req.body;
     const { organizer_id } = req.headers;
 
     const stmt = 'UPDATE EVENT SET name = ?, description = ?, rules = ?, venue = ?, date = ?, fee = ?, category_id = ? WHERE organizer_id = ?';
@@ -176,7 +166,7 @@ router.post('/update', [validator(eventValidator.newEvent), updateVersion], asyn
  * Register a user to an event
  */
 router.post('/user/register', validator(eventValidator.registerToEvent), async (req, res) => {
-    const { event_id } = req.fields;
+    const { event_id } = req.body;
     const { user_id } = req.headers;
 
     const stmt = 'INSERT INTO EVENT_REG (user_id, event_id, payment_made, registration_time) VALUES (?, ?, ?, ?)';
@@ -268,7 +258,7 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
  * Register a notification for the event under the requesting organizer
  */
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
-    const { title, message } = req.fields;
+    const { title, message } = req.body;
     const { organizer_id } = req.headers;
 
     const stmt = '' +
