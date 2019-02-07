@@ -21,12 +21,29 @@
  */
 
 const express = require('express');
-const { Response, ERR_CODE } = require('../helpers/response-helper');
+const {
+    Response,
+    ERR_CODE
+} = require('../helpers/response-helper');
 const router = express.Router();
-const { conn } = require('../config');
-const { eventValidator } = require('../validators');
+const {
+    conn
+} = require('../config');
+const {
+    eventValidator
+} = require('../validators');
 const validator = require('express-validation');
-const { updateVersion } = require('../middleware');
+const {
+    updateVersion
+} = require('../middleware');
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://habba19x.firebaseio.com"
+});
+
 
 /**
  * NEW EVENT
@@ -42,8 +59,18 @@ const { updateVersion } = require('../middleware');
  * 
  */
 router.post('/new', [validator(eventValidator.newEvent), updateVersion], async (req, res) => {
-    const { name, description, rules, venue, date, fee, category_id } = req.body;
-    const { organizer_id } = req.headers;
+    const {
+        name,
+        description,
+        rules,
+        venue,
+        date,
+        fee,
+        category_id
+    } = req.body;
+    const {
+        organizer_id
+    } = req.headers;
 
     const stmt1 = 'SELECT COUNT(*) AS count FROM EVENT WHERE organizer_id = ?';
     const stmt2 = 'INSERT INTO EVENT (name, description, rules, venue, date, fee, organizer_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -81,7 +108,9 @@ router.post('/new', [validator(eventValidator.newEvent), updateVersion], async (
  * 
  */
 router.get('/details', validator(eventValidator.eventDetails), async (req, res) => {
-    const { organizer_id } = req.headers;
+    const {
+        organizer_id
+    } = req.headers;
 
     const stmt1 = '' +
         'SELECT E.*, C.name as category_name ' +
@@ -134,8 +163,18 @@ router.get('/details', validator(eventValidator.eventDetails), async (req, res) 
  * 
  */
 router.post('/update', [validator(eventValidator.newEvent), updateVersion], async (req, res) => {
-    const { name, description, rules, venue, date, fee, category_id } = req.body;
-    const { organizer_id } = req.headers;
+    const {
+        name,
+        description,
+        rules,
+        venue,
+        date,
+        fee,
+        category_id
+    } = req.body;
+    const {
+        organizer_id
+    } = req.headers;
 
     const stmt = 'UPDATE EVENT SET name = ?, description = ?, rules = ?, venue = ?, date = ?, fee = ?, category_id = ? WHERE organizer_id = ?';
 
@@ -166,13 +205,20 @@ router.post('/update', [validator(eventValidator.newEvent), updateVersion], asyn
  * Register a user to an event
  */
 router.post('/user/register', validator(eventValidator.registerToEvent), async (req, res) => {
-    const { event_id } = req.body;
-    const { user_id } = req.headers;
+    const {
+        event_id,
+        device_id
+    } = req.body;
+    const {
+        user_id
+    } = req.headers;
 
     const stmt = 'INSERT INTO EVENT_REG (user_id, event_id, payment_made, registration_time) VALUES (?, ?, ?, ?)';
 
     try {
         await conn.query(stmt, [user_id, event_id, 0, new Date()]);
+        const result = await admin.messaging().subscribeToTopic(device_id, event_id)
+        console.log(result);
         res.send(new Response().noError());
     } catch (e) {
         console.log(e);
@@ -182,6 +228,7 @@ router.post('/user/register', validator(eventValidator.registerToEvent), async (
         }
         res.send(new Response().withError(ERR_CODE.DB_WRITE));
     }
+
 });
 
 /**
@@ -197,7 +244,9 @@ router.post('/user/register', validator(eventValidator.registerToEvent), async (
  *  notifications recieved for their event
  */
 router.get('/user/details', validator(eventValidator.userDetails), async (req, res) => {
-    const { user_id } = req.headers;
+    const {
+        user_id
+    } = req.headers;
 
     const stmt1 = '' +
         'SELECT name, email, phone_number, college_name FROM USER WHERE user_id = ?';
@@ -249,30 +298,47 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
 
 /**
  * NOTIFICATION
- * fileds: {
+ * feilds: {
  *  title, message
  * }
- * headaers: {
+ * headers: {
  *  organizer_id
  * }
- * Register a notification for the event under the requesting organizer
+ * Register a notification for the event under the requesting organizer and getting his/her event's ID.
  */
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
-    const { title, message } = req.body;
-    const { organizer_id } = req.headers;
+    const {
+        title,
+        message
+    } = req.body;
+    const {
+        organizer_id
+    } = req.headers;
 
-    const stmt = '' +
-        'INSERT INTO NOTIFICATION (event_id, title, message, sent_date) ' +
-        `SELECT event_id, ?, ?, ? ` +
+    const stmt1 = 'SELECT event_id ' +
         'FROM EVENT ' +
-        'WHERE organizer_id = ?';
+        'WHERE organizer_id= ? ';
+    const stmt2 = '' +
+        'INSERT INTO NOTIFICATION (event_id, title, message, sent_date) VALUES (?,?,?,?) '
+
 
     try {
-        await conn.query(stmt, [title, message, new Date(), organizer_id]);
+        const result = await conn.query(stmt1, [organizer_id]);
+        const event_id = result[0].event_id;
+        const topic = event_id;
+
+        const nmessage = {
+            notification: {
+                title: title,
+                body: message
+            },
+        };
+        const nresult = await admin.messaging().sendToTopic(event_id.toString(), nmessage);
+        await conn.query(stmt2, [event_id, title, message, new Date()]);
         res.send(new Response().noError());
     } catch (e) {
         console.log(e);
-        res.send(new Response().withError(ERR_CODE.DB_WRITE));
+        res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }
 });
 
@@ -282,8 +348,33 @@ router.post('/notification', validator(eventValidator.notification), async (req,
  * Get all categories, events and workshops in one request
  * 
  */
-router.get('/master_fetch', async (req, res) => {
+router.get('/masterfetch', async (req, res) => {
 
+    const stmt1 = '' +
+        'SELECT E.* FROM EVENT AS E ORDER BY E.category_id' +
+        '';
+
+    try {
+        const result1 = await conn.query(stmt1);
+        let arr = [];
+        result1.forEach(row => {
+            if (arr.findIndex(o => o.category_id === row.category_id) === -1)
+                arr.push({
+                    category_id: row.category_id,
+                    events: []
+                })
+        })
+        arr = arr.map(obj => {
+            const eventsArr = result1.filter(o => o.category_id === obj.category_id);
+            obj.events = [...eventsArr];
+            return obj;
+        })
+    
+        res.send(new Response);
+    } catch (e) {
+        console.log(e);
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
 });
 
 /**
