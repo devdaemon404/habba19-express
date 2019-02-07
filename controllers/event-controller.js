@@ -369,8 +369,13 @@ router.get('/masterfetch', async (req, res) => {
             obj.events = [...eventsArr];
             return obj;
         })
+
+        const obj = {};
+        obj.mainEvents = arr;
+        // IMPLEMENT WORKSHOPS
+        obj.workshops = {};
     
-        res.send(new Response);
+        res.send(new Response().withData(obj).noError());
     } catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.DB_READ));
