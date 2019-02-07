@@ -348,7 +348,7 @@ router.post('/notification', validator(eventValidator.notification), async (req,
  * Get all categories, events and workshops in one request
  * 
  */
-router.get('/master_fetch', async (req, res) => {
+router.get('/masterfetch', async (req, res) => {
 
     const stmt1 = '' +
         'SELECT E.* FROM EVENT AS E ORDER BY E.category_id' +
@@ -375,8 +375,6 @@ router.get('/master_fetch', async (req, res) => {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.DB_READ));
     }
-
-    // being implemented by Bharat.
 });
 
 /**
