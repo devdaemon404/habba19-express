@@ -350,7 +350,31 @@ router.post('/notification', validator(eventValidator.notification), async (req,
  */
 router.get('/master_fetch', async (req, res) => {
 
-    res.send("Naah bruv");
+    const stmt1 = '' +
+        'SELECT E.* FROM EVENT AS E ORDER BY E.category_id' +
+        '';
+
+    try {
+        const result1 = await conn.query(stmt1);
+        let arr = [];
+        result1.forEach(row => {
+            if (arr.findIndex(o => o.category_id === row.category_id) === -1)
+                arr.push({
+                    category_id: row.category_id,
+                    events: []
+                })
+        })
+        arr = arr.map(obj => {
+            const eventsArr = result1.filter(o => o.category_id === obj.category_id);
+            obj.events = [...eventsArr];
+            return obj;
+        })
+    
+        res.send(new Response);
+    } catch (e) {
+        console.log(e);
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
 
     // being implemented by Bharat.
 });
