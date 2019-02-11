@@ -376,7 +376,7 @@ router.get('/masterfetch', async (req, res) => {
         obj.mainEvents = arr;
         // IMPLEMENT WORKSHOPS
         obj.workshops = {};
-    
+
         res.send(new Response().withData(obj).noError());
     } catch (e) {
         console.log(e);
@@ -399,6 +399,18 @@ router.get('/version', async (req, res) => {
     } catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
+})
+
+router.post('/subgen', async (req, res) => {
+    const { device_id } = req.body;
+    try {
+        const result = await admin.messaging().subscribeToTopic(device_id, 'ALL');
+        console.log(result);
+        res.send(new Response().noError());
+    }
+    catch {
+        res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }
 })
 
