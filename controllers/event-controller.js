@@ -409,7 +409,8 @@ router.post('/subgen', async (req, res) => {
         console.log(result);
         res.send(new Response().noError());
     }
-    catch {
+    catch(e) {
+        console.log(e);
         res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }
 })
