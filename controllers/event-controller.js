@@ -351,7 +351,7 @@ router.post('/notification', validator(eventValidator.notification), async (req,
 router.get('/masterfetch', async (req, res) => {
 
     const stmt1 = '' +
-        'SELECT E.* FROM EVENT AS E ORDER BY E.category_id' +
+        'SELECT E.*, C.name as category_name, C.img_url as category_images FROM EVENT AS E, CATEGORY as C WHERE E.category_id = C.category_id ORDER BY E.category_id' +
         '';
 
     try {
@@ -361,6 +361,8 @@ router.get('/masterfetch', async (req, res) => {
             if (arr.findIndex(o => o.category_id === row.category_id) === -1)
                 arr.push({
                     category_id: row.category_id,
+                    category_name: row.category_name,
+                    category_images: row.category_images,
                     events: []
                 })
         })
