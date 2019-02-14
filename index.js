@@ -36,6 +36,7 @@ const main = async () => {
     app.use('/auth', controllers.authRouter);
     app.use('/holy', controllers.holympicsRouter);
     app.use('/workshop', controllers.workshopRouter);
+    app.use('/newsfeed', controllers.newsfeedRouter);
 
     app.all('*', (req, res) => {
         res.status(404).send({
