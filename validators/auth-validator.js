@@ -13,7 +13,7 @@ module.exports = {
             college_name: reqString
         }
     },
-    userLogin: {
+    organizerLogin: {
         body: {
             organizer_id: reqString,
             password: reqString
@@ -27,7 +27,7 @@ module.exports = {
             phone_number: reqString,
         }
     },
-    organizerLogin: {
+    userLogin: {
         body: {
             email: reqString,
             password: reqString
