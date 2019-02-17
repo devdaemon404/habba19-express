@@ -39,7 +39,7 @@ router.post('/new', async (req, res) => {
         try {
             const result = await conn.query(stmt, [title, body, url]);   
             const result1 = await admin.messaging().sendToTopic('ALL', message);
-            res.send(result1);
+            res.send(new Response().noError());
         }
         catch(e) {
             console.log(e);
@@ -52,13 +52,12 @@ router.post('/new', async (req, res) => {
     
 })
 
-router.get('/details',async (req, res) => {
+router.get('/all',async (req, res) => {
     const stmt = 'SELECT * FROM NEWSFEED';
     try {
         const results = await conn.query(stmt);
-        const obj = {};
-        obj.newsfeed = results;
-        res.send(new Response().withData(obj));
+      
+        res.send(new Response().withData(results));
     }
     catch(e) {
         console.log(e);
