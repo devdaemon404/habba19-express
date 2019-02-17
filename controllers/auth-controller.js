@@ -67,7 +67,7 @@ router.post('/user/login', validator(authValidator.userLogin), async (req, res) 
         const result = await conn.query(stmt, [email]);
 
         if (await bcrypt.compare(password, result[0]['password'])) {
-            res.send(new Response().withToken(result[0]['id']).noError());
+            res.send(new Response().withToken(result[0]['user_id']).noError());
             return;
         }
         // Invalid password condition
