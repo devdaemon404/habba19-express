@@ -284,7 +284,7 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
         obj.workshopsRegistered = results3;
         const results4 = await conn.query(stmt4, [user_id]);
         obj.notifications = results4;
-        res.send(new Response().withData(obj));
+        res.send(new Response().withData(obj).noError());
     } catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.DB_READ));
