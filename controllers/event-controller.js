@@ -21,21 +21,12 @@
  */
 
 const express = require('express');
-const {
-    Response,
-    ERR_CODE
-} = require('../helpers/response-helper');
+const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
-const {
-    conn
-} = require('../config');
-const {
-    eventValidator
-} = require('../validators');
+const { conn } = require('../config');
+const { eventValidator } = require('../validators');
 const validator = require('express-validation');
-const {
-    updateVersion
-} = require('../middleware');
+const { updateVersion } = require('../middleware');
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
 
@@ -222,8 +213,12 @@ router.post('/user/register', validator(eventValidator.registerToEvent), async (
         res.send(new Response().noError());
     } catch (e) {
         console.log(e);
-        if (e.code = 'ER_DUP_ENTRY') {
-            res.send(new Response().withError(ERR_CODE.ALREADY_REGISTERED))
+        if (e.errno === 1062) {
+            res.send(new Response().withError(ERR_CODE.ALREADY_REGISTERED));
+            return;
+        }
+        if (e.errno === 1452) {
+            res.send(new Response().withError(ERR_CODE.INVALID_USR));
             return;
         }
         res.send(new Response().withError(ERR_CODE.DB_WRITE));
@@ -289,7 +284,7 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
         obj.workshopsRegistered = results3;
         const results4 = await conn.query(stmt4, [user_id]);
         obj.notifications = results4;
-        res.send(new Response().withData(obj));
+        res.send(new Response().withData(obj).noError());
     } catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.DB_READ));
@@ -409,11 +404,12 @@ router.post('/subgen', async (req, res) => {
         console.log(result);
         res.send(new Response().noError());
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }
 })
+
 
 router.get('/notifs',async (req, res) => {
     res.render('../views/notif.ejs');
@@ -440,3 +436,4 @@ router.post('/notifs', async (req, res) => {
 })
 
 module.exports = router;
+
