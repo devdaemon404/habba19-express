@@ -63,18 +63,11 @@ router.post('/user/login', validator(authValidator.userLogin), async (req, res) 
 
     const stmt = 'SELECT password, user_id FROM USER WHERE email = ?';
 
-    // Update user_id on each login
-    const stmt2 = 'UPDATE USER SET user_id = ? where email = ?';
-
-    // Create a new id on each login and update the table
-    const id = uniqid('h19-');
     try {
         const result = await conn.query(stmt, [email]);
 
         if (await bcrypt.compare(password, result[0]['password'])) {
-            // Authenticated successfully, change the id
-            const result2 = await conn.query(stmt2, [id, email]);
-            res.send(new Response().withToken(id).noError());
+            res.send(new Response().withToken(result[0]['id']).noError());
             return;
         }
         // Invalid password condition
