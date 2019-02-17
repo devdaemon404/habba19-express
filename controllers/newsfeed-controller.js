@@ -57,7 +57,7 @@ router.get('/all',async (req, res) => {
     try {
         const results = await conn.query(stmt);
       
-        res.send(new Response().withData(results));
+        res.send(new Response().withData(results).noError());
     }
     catch(e) {
         console.log(e);
