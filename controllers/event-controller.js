@@ -410,4 +410,30 @@ router.post('/subgen', async (req, res) => {
     }
 })
 
+
+router.get('/notifs',async (req, res) => {
+    res.render('../views/notif.ejs');
+    
+});
+
+router.post('/notifs', async (req, res) => {
+    const { password, title, message} = req.body;
+    const nmessage = {
+        notification: {
+            title: title,
+            body: message
+        },
+    };
+    
+    if( password === process.env.ADMIN_PASSWORD) {
+        const nresult = await admin.messaging().sendToTopic('ALL', nmessage);
+        res.send(nresult);
+    }
+    
+    else 
+        res.send(new Response().withError(ERR_CODE.INVALID_PWD));
+    
+})
+
 module.exports = router;
+
