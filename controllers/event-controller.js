@@ -21,21 +21,12 @@
  */
 
 const express = require('express');
-const {
-    Response,
-    ERR_CODE
-} = require('../helpers/response-helper');
+const { Response, ERR_CODE } = require('../helpers/response-helper');
 const router = express.Router();
-const {
-    conn
-} = require('../config');
-const {
-    eventValidator
-} = require('../validators');
+const { conn } = require('../config');
+const { eventValidator } = require('../validators');
 const validator = require('express-validation');
-const {
-    updateVersion
-} = require('../middleware');
+const { updateVersion } = require('../middleware');
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
 
@@ -413,7 +404,7 @@ router.post('/subgen', async (req, res) => {
         console.log(result);
         res.send(new Response().noError());
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
         res.send(new Response().withError(ERR_CODE.NOTIFICATION_FAILED));
     }

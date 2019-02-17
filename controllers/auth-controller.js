@@ -80,6 +80,7 @@ router.post('/user/login', validator(authValidator.userLogin), async (req, res) 
         // Invalid password condition
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
     } catch (err) {
+        console.log(err);
         // Invalid email condition
         res.send(new Response().withError(ERR_CODE.INVALID_USR));
     }
