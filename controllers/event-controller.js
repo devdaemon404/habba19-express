@@ -222,8 +222,12 @@ router.post('/user/register', validator(eventValidator.registerToEvent), async (
         res.send(new Response().noError());
     } catch (e) {
         console.log(e);
-        if (e.code = 'ER_DUP_ENTRY') {
-            res.send(new Response().withError(ERR_CODE.ALREADY_REGISTERED))
+        if (e.errno === 1062) {
+            res.send(new Response().withError(ERR_CODE.ALREADY_REGISTERED));
+            return;
+        }
+        if (e.errno === 1452) {
+            res.send(new Response().withError(ERR_CODE.INVALID_USR));
             return;
         }
         res.send(new Response().withError(ERR_CODE.DB_WRITE));
