@@ -115,7 +115,7 @@ router.post('/organizer/signup', validator(authValidator.organizerSignup), async
  * 
  * Verify login and change id's on each login
  */
-router.post('/organizer/login', validator(authValidator.userLogin), async (req, res) => {
+router.post('/organizer/login', validator(authValidator.organizerLogin), async (req, res) => {
     const { organizer_id, password } = req.body;
 
     const stmt = 'SELECT password, organizer_id FROM ORGANIZER WHERE organizer_id = ?';
