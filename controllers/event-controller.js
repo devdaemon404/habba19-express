@@ -247,11 +247,13 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
         'SELECT name, email, phone_number, college_name FROM USER WHERE user_id = ?';
 
     const stmt2 = '' +
-        'SELECT EV.* ' +
-        'FROM EVENT as EV, EVENT_REG as E, USER as U ' +
+        'SELECT EV.*,O.name as organizer_name, O.organizer_id, O.phone_number, O.email ' +
+        'FROM EVENT as EV, EVENT_REG as E, USER as U ,ORGANIZER as O ' +
         'WHERE EV.event_id = E.event_id ' +
+        'AND EV.organizer_id = O.organizer_id ' +
         'AND U.user_id = E.user_id ' +
         'AND E.user_id = ?';
+
 
     const stmt3 = '' +
         'SELECT WS.* ' +
