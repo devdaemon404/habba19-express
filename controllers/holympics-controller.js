@@ -20,7 +20,7 @@ const { holympicsValidator } = require('../validators');
 
 router.get('/colleges', async (req,res) => {
     
-    const stmt = 'SELECT * FROM COLLEGE ORDER BY name';
+    const stmt = 'SELECT * FROM COLLEGE ORDER BY points';
     
     try {
         const results = await conn.query(stmt);
