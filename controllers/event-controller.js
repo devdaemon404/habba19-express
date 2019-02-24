@@ -348,7 +348,11 @@ router.post('/notification', validator(eventValidator.notification), async (req,
 router.get('/masterfetch', async (req, res) => {
 
     const stmt1 = '' +
-        'SELECT E.*, C.name as category_name, C.img_url as category_images FROM EVENT AS E, CATEGORY as C WHERE E.category_id = C.category_id ORDER BY E.category_id' +
+        'SELECT E.*, C.name as category_name, C.img_url as category_images, O.name as organizer_name, O.phone_number as organizer_phone ' +
+        'FROM EVENT AS E CATEGORY as C ORGANIZER as O ' +
+        'WHERE E.category_id = C.category_id ' +
+        'E.organizer_id = O.organizer_id ' +
+        'ORDER BY E.category_id ' +
         '';
 
     try {
@@ -413,28 +417,28 @@ router.post('/subgen', async (req, res) => {
 })
 
 
-router.get('/notifs',async (req, res) => {
+router.get('/notifs', async (req, res) => {
     res.render('../views/notif.ejs');
-    
+
 });
 
 router.post('/notifs', async (req, res) => {
-    const { password, title, message} = req.body;
+    const { password, title, message } = req.body;
     const nmessage = {
         notification: {
             title: title,
             body: message
         },
     };
-    
-    if( password === process.env.ADMIN_PASSWORD) {
+
+    if (password === process.env.ADMIN_PASSWORD) {
         const nresult = await admin.messaging().sendToTopic('ALL', nmessage);
         res.send(nresult);
     }
-    
-    else 
+
+    else
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
-    
+
 })
 
 module.exports = router;
