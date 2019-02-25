@@ -442,18 +442,21 @@ router.post('/notifs', async (req, res) => {
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
 
 });
-
 router.get('/instapics',(req,res)=>{
     var resFile=[];
-    fs.readdir(testFolders, (err, files) => {
+    fs.readdir(testFolder, (err, files) => {
     files.forEach(file => {
     
+        if(file==null){
+        res.send(new Response().withError(ERR_CODE.PICTURES_NOTFOUND));
+        }
         if(file.endsWith('.jpg')){
             resFile.push(file);
         }
         });
-res.send(resFile);
+res.send(new Response().withData(resFile).noError());
 });
 })
+
 module.exports = router;
 
