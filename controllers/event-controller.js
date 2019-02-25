@@ -29,7 +29,7 @@ const validator = require('express-validation');
 const { updateVersion } = require('../middleware');
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
-const testFolders = '../../images/instagram/habba19';
+const testFolder = '../../images/instagram/habba19';
 const fs = require('fs');
 
 admin.initializeApp({
