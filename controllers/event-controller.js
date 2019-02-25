@@ -354,7 +354,7 @@ router.get('/masterfetch', async (req, res) => {
         'FROM EVENT AS E, CATEGORY as C, ORGANIZER as O ' +
         'WHERE E.category_id = C.category_id ' +
         'AND E.organizer_id = O.organizer_id ' +
-        'ORDER BY E.category_id ' +
+        'ORDER BY C.index ' +
         '';
 
     try {
