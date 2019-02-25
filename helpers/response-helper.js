@@ -71,6 +71,10 @@ const ERR_CODE = {
     NOTIFICATION_FAILED: {
         code: 401,
         message: 'Notification did not send due to an internal error'
+    },
+    PICTURES_NOTFOUND:{
+        code: 505,
+        message: 'No pictures were found in the server.'
     }
 };
 module.exports = {
