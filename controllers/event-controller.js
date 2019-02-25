@@ -29,6 +29,8 @@ const validator = require('express-validation');
 const { updateVersion } = require('../middleware');
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
+const testFolders = '../../images/instagram/habba19';
+const fs = require('fs');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -439,7 +441,19 @@ router.post('/notifs', async (req, res) => {
     else
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
 
-})
+});
+
+router.get('/instapics',(req,res)=>{
+    var resFile=[];
+    fs.readdir(testFolders, (err, files) => {
+    files.forEach(file => {
+    
+        if(file.endsWith('.jpg')){
+            resFile.push(file);
+        }
+        });
+res.send(resFile);
+});
 
 module.exports = router;
 
