@@ -458,5 +458,24 @@ res.send(new Response().withData(resFile).noError());
 });
 })
 
+router.get('/organizer_details', async (req, res) => {
+    
+    const stmt = '' + 
+        'SELECT E.event_id, E.name as event_name , O.organizer_id , O.name as organizer_name ' +
+        'FROM EVENT as E ' +
+        'INNER JOIN ORGANIZER as O ' +
+        'ON E.organizer_id = O.organizer_id ' ;
+    try {
+
+        const result = await conn.query(stmt);
+        res.render('../views/organizer_details.ejs', { organizer: result});
+
+    } catch (err) {
+        console.log(err)
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
+
+
+});
 module.exports = router;
 
