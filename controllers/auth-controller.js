@@ -30,7 +30,7 @@ const bcrypt = require('bcrypt');
  *  email, password, phone_number, college_name
  * }
  */
-    
+
 router.post('/user/signup', validator(authValidator.userSignup), async (req, res) => {
 
     const { email, password, phone_number, college_name, name } = req.body;
@@ -123,9 +123,9 @@ router.post('/organizer/login', validator(authValidator.organizerLogin), async (
     try {
         const result = await conn.query(stmt, [organizer_id]);
 
-            // Authenticated successfully, change the id
-            res.send(new Response().withToken(result[0]['organizer_id']).noError());
-            return;
+        // Authenticated successfully, change the id
+        res.send(new Response().withToken(result[0]['organizer_id']).noError());
+        return;
         // Invalid password condition
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
     } catch (err) {

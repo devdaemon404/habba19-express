@@ -442,39 +442,65 @@ router.post('/notifs', async (req, res) => {
         res.send(new Response().withError(ERR_CODE.INVALID_PWD));
 
 });
-router.get('/instapics',(req,res)=>{
-    var resFile=[];
+router.get('/instapics', (req, res) => {
+    var resFile = [];
     fs.readdir(testFolder, (err, files) => {
-    files.forEach(file => {
-    
-        if(file==null){
-        res.send(new Response().withError(ERR_CODE.PICTURES_NOTFOUND));
-        }
-        if(file.endsWith('.jpg')){
-            resFile.push(file);
-        }
+        files.forEach(file => {
+
+            if (file == null) {
+                res.send(new Response().withError(ERR_CODE.PICTURES_NOTFOUND));
+            }
+            if (file.endsWith('.jpg')) {
+                resFile.push(file);
+            }
         });
-res.send(new Response().withData(resFile).noError());
-});
+        res.send(new Response().withData(resFile).noError());
+    });
 })
 
 router.get('/organizer_details', async (req, res) => {
-    
-    const stmt = '' + 
-        'SELECT E.event_id, E.name as event_name , O.organizer_id , O.name as organizer_name ' +
+
+    const stmt = '' +
+        'SELECT E.event_id, E.name as event_name , O.organizer_id , O.name as organizer_name , phone_number , email ' +
         'FROM EVENT as E ' +
         'INNER JOIN ORGANIZER as O ' +
-        'ON E.organizer_id = O.organizer_id ' ;
+        'ON E.organizer_id = O.organizer_id ';
     try {
-
         const result = await conn.query(stmt);
-        res.render('../views/organizer_details.ejs', { organizer: result});
-
-    } catch (err) {
+        res.render('../views/organizer_details.ejs', { organizer: result });
+    }
+    catch (err) {
         console.log(err)
         res.send(new Response().withError(ERR_CODE.DB_READ));
     }
 
+});
+
+router.get('/update_organizer/:id', async (req, res) => {
+    const id = req.params.id + '';
+    const stmt = 'SELECT * FROM ORGANIZER WHERE organizer_id = ?';
+    try {
+        const result = await conn.query(stmt, [id]);
+        res.render('../views/update_organizer.ejs', { organizer: result });
+    }
+    catch (err) {
+        console.log(err)
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
+
+});
+
+router.post('/update_organizer/:id', async (req, res) => {
+    const id = req.params.id + '';
+    const { name, phone_number, email, password, master_password } = req.body;
+    const stmt = 'UPDATE ORGANIZER SET name = ?, phone_number = ?, email = ?, password = ? WHERE organizer_id = ?';
+    if (master_password === process.env.MASTER_PASSWORD) {
+        const result = await conn.query(stmt, [name, phone_number, email, password, id]);
+        res.send(new Response().noError());
+    }
+    else {
+        res.send(new Response().withError(ERR_CODE.DB_WRITE));
+    }
 
 });
 module.exports = router;

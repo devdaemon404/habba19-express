@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Update</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-info navbar-expand-sm">
+        <div class="container">
+            <div class="navbar-nav mr-auto">
+                <a class="btn btn-info back-link mr-2" href="../organizer_details">&laquo; Back</a>
+                <div class="lead navbar-brand d-none d-lg-block active">Edit Organizer</div>
+            </div>
+            <!-- navbar-nav -->
+        </div>
+        <!-- container -->
+    </nav>
+    <div class="jumbotron">
+        <h3 class="lead text-center">Organizer Details</h3>
+        <div id="content" class="container">
+            <form class="form-group" action="../update_organizer/<%= organizer[0].organizer_id %>" method="post">
+                <dl>
+                    <label class="form-label-control">Name</label>
+                    <dd class="form-label"><input class="form-control" type="text" name="name"
+                            value="<%= organizer[0].name %>" /></dd>
+                </dl>
+                <dl>
+                    <label class="form-label-control">Phone Number</label>
+                    <dd class="form-label"><input class="form-control" type="text" name="phone_number"
+                            value="<%= organizer[0].phone_number %>" /></dd>
+                </dl>
+                <dl>
+                    <label class="form-label-control">Email</label>
+                    <dd class="form-label"><input class="form-control" type="text" name="email"
+                            value="<%= organizer[0].email %>" /></dd>
+                </dl>
+                <dl>
+                    <label class="form-label-control">Password</label>
+                    <dd class="form-label"><input class="form-control" type="password" name="password"
+                            value="<%= organizer[0].password %>" /></dd>
+                </dl>
+                <dl>
+                    <label class="form-label-control">Master Password</label>
+                    <dd class="form-label"><input class="form-control" type="password" name="master_password"
+                            value="" /></dd>
+                </dl>
+                <div id="operations">
+                    <button class="btn btn-primary" type="submit" value="Edit Organizer">Edit Organizer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="page-footer font-small blue pt-4">
+        <div class="footer-copyright text-center py-3">Copyright 2018, Vinsmoke </div>
+        <!--<p class="footer-copyright text-center py-3">If you copy the source code just ligma ballz</p>-->
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
