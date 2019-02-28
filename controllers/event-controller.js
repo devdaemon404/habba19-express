@@ -197,7 +197,7 @@ router.post('/update', [validator(eventValidator.newEvent), updateVersion], asyn
  * 
  * Register a user to an event
  */
-router.post('/user/register', validator(eventValidator.registerToEvent), async (req, res) => {
+router.post('/user/register', async (req, res) => {
     const {
         event_id,
         device_id
@@ -205,14 +205,26 @@ router.post('/user/register', validator(eventValidator.registerToEvent), async (
     const {
         user_id
     } = req.headers;
-
+    const events = ['13', '14', '15', '16', '17', '18', '19', '43', '64', '65', '66'];
     const stmt = 'INSERT INTO EVENT_REG (user_id, event_id, payment_made, registration_time) VALUES (?, ?, ?, ?)';
-
+    const split = user_id.split("-");
     try {
-        await conn.query(stmt, [user_id, event_id, 0, new Date()]);
-        const result = await admin.messaging().subscribeToTopic(device_id, event_id)
-        console.log(result);
-        res.send(new Response().noError());
+        if (events.includes(event_id)) {
+            if (split[0] === 'ay') {
+                await conn.query(stmt, [user_id, event_id, 0, new Date()]);
+                const result = await admin.messaging().subscribeToTopic(device_id, event_id)
+                console.log(result);
+                res.send(new Response().noError());
+            }
+            else res.send(new Response().withError(ERR_CODE.INVALID_EVE));
+        }
+        else if (!(event_id.includes(events))) {
+            await conn.query(stmt, [user_id, event_id, 0, new Date()]);
+            const result = await admin.messaging().subscribeToTopic(device_id, event_id)
+            console.log(result);
+            res.send(new Response().noError());
+        }
+
     } catch (e) {
         console.log(e);
         if (e.errno === 1062) {

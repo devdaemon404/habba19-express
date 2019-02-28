@@ -31,17 +31,38 @@ const bcrypt = require('bcrypt');
  * }
  */
 
-router.post('/user/signup', validator(authValidator.userSignup), async (req, res) => {
+router.post('/user/signup', validator(authValidator.userLogin), async (req, res) => {
 
     const { email, password, phone_number, college_name, name } = req.body;
-    const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time , department_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     const id = uniqid('h19-');
+    const id1 = uniqid('ay-');
+    let department = '';
+    let college = '';
     try {
         const hashedPwd = await bcrypt.hash(password, 2);
-        const results = await conn.query(stmt, [id, name, email, hashedPwd, phone_number, college_name, new Date()]);
-        res.send(new Response().withToken(id).noError());
+        if (college_name === 'ay_cert') {
 
-    } catch (err) {
+            var split0 = email.split('@');
+            var split1 = split0[0].split('.');
+            if (split1.length > 1) {
+                college = split1[1].slice(0, 2).toUpperCase();
+                department = split1[1].slice(2, 4).toUpperCase();
+            }
+            else {
+                college = 'faculty';
+                department = 'faculty';
+            }
+            const results = await conn.query(stmt, [id1, name, email, hashedPwd, phone_number, college, new Date(), department]);
+            res.send(new Response().withToken(id1).noError());
+        }
+        else if (college_name !== 'ay_cert') {
+            const results = await conn.query(stmt, [id, name, email, hashedPwd, phone_number, college_name, new Date(), department]);
+            res.send(new Response().withToken(id).noError());
+
+        }
+    }
+    catch (err) {
         console.log(err)
         res.send(new Response().withError(ERR_CODE.USER_EXISTS));
     }

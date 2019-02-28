@@ -44,6 +44,10 @@ const ERR_CODE = {
         code: 702,
         message: 'Invalid username/password'
     },
+    INVALID_EVE: {
+        code: 702,
+        message: 'Acharya students/faculty can only register'
+    },
     USER_EXISTS: {
         code: 703,
         message: 'User already exists with the username'
