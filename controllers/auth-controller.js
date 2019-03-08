@@ -35,7 +35,6 @@ router.post('/user/signup', validator(authValidator.userLogin), async (req, res)
 
     const { email, password, phone_number, college_name, name } = req.body;
     const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time , department_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    const arr = ['17', '18'];
     const id = uniqid('h19-');
     const id1 = uniqid('ay-');
     let department = '';
@@ -43,21 +42,20 @@ router.post('/user/signup', validator(authValidator.userLogin), async (req, res)
     try {
         const hashedPwd = await bcrypt.hash(password, 2);
         if (college_name === 'ay_cert') {
-
-            var split0 = email.split('@');
-            var split1 = split0[0].split('.');
-            if (split1.length > 1) {
-                if (arr.includes(split1[1])) {
-
-                    college = split1[2].slice(0, 2).toUpperCase();
-                    department = split1[2].slice(2, 4).toUpperCase();
-                }
-                else {
-                    college = split1[1].slice(0, 2).toUpperCase();
-                    department = split1[1].slice(2, 4).toUpperCase();
-                }
+            const str = email.split('@')[0];
+            const arr = ['13','14','15','16', '17', '18']
+            const split1 = str.split('.');
+            if (arr.includes(split1[split1.length - 2])) {
+                const substr = str.substring(str.length, str.length - 4);
+                college = substr.slice(0, 2).toUpperCase();
+                department = substr.slice(2, 4).toUpperCase();
             }
-            else {
+            else if (arr.includes(split1[split1.length - 1])) {
+                const substr = str.substring(str.length - 3, str.length - 7);
+                college = substr.slice(0, 2).toUpperCase();
+                department = substr.slice(2, 4).toUpperCase();
+            }
+            else{
                 college = 'faculty';
                 department = 'faculty';
             }
