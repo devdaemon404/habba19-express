@@ -35,6 +35,7 @@ router.post('/user/signup', validator(authValidator.userLogin), async (req, res)
 
     const { email, password, phone_number, college_name, name } = req.body;
     const stmt = 'INSERT INTO USER (user_id, name, email, password, phone_number, college_name, registration_time , department_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const arr = ['17', '18'];
     const id = uniqid('h19-');
     const id1 = uniqid('ay-');
     let department = '';
@@ -46,8 +47,15 @@ router.post('/user/signup', validator(authValidator.userLogin), async (req, res)
             var split0 = email.split('@');
             var split1 = split0[0].split('.');
             if (split1.length > 1) {
-                college = split1[1].slice(0, 2).toUpperCase();
-                department = split1[1].slice(2, 4).toUpperCase();
+                if (arr.includes(split1[1])) {
+
+                    college = split1[2].slice(0, 2).toUpperCase();
+                    department = split1[2].slice(2, 4).toUpperCase();
+                }
+                else {
+                    college = split1[1].slice(0, 2).toUpperCase();
+                    department = split1[1].slice(2, 4).toUpperCase();
+                }
             }
             else {
                 college = 'faculty';

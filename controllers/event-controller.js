@@ -488,6 +488,7 @@ router.get('/organizer_details', async (req, res) => {
 
 });
 
+
 router.get('/update_organizer/:id', async (req, res) => {
     const id = req.params.id + '';
     const stmt = 'SELECT * FROM ORGANIZER WHERE organizer_id = ?';
@@ -512,6 +513,31 @@ router.post('/update_organizer/:id', async (req, res) => {
     }
     else {
         res.send(new Response().withError(ERR_CODE.DB_WRITE));
+    }
+
+});
+
+router.get('/event_cred', async (req, res) => {
+    res.render('../views/event_cred.ejs');
+
+});
+router.post('/event_details', async (req, res) => {
+
+    const { event_id } = req.body;
+    const stmt = '' +
+        'SELECT U.name as u_name, U.phone_number as phone_number, U.college_name, U.department_name, U.email '+
+        'FROM USER as U, EVENT_REG as ER '+
+        'WHERE U.user_id = ER.user_id '+
+        'AND ER.event_id = ?';
+    const stmt1 = 'SELECT * FROM EVENT WHERE event_id = ?'
+    try {
+        const result = await conn.query(stmt, [event_id]);
+        const result1 = await conn.query(stmt1, [event_id]);
+        res.render('../views/event_details.ejs', { event: result,event_name :result1 });
+    }
+    catch (err) {
+        console.log(err)
+        res.send(new Response().withError(ERR_CODE.DB_READ));
     }
 
 });
