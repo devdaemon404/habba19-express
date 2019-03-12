@@ -48,6 +48,10 @@ const ERR_CODE = {
         code: 702,
         message: 'Acharya students/faculty can only register'
     },
+    INVALID_EVE1: {
+        code: 702,
+        message: 'Faculty registration only'
+    },
     USER_EXISTS: {
         code: 703,
         message: 'User already exists with the username'

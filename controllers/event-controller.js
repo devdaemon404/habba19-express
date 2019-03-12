@@ -206,10 +206,27 @@ router.post('/user/register', async (req, res) => {
         user_id
     } = req.headers;
     const events = ['13', '14', '15', '16', '17', '18', '19', '43', '64', '65', '66'];
+    const fevents = [];
     const stmt = 'INSERT INTO EVENT_REG (user_id, event_id, payment_made, registration_time) VALUES (?, ?, ?, ?)';
+    const stmt1 = 'SELECT college_name as col FROM USER WHERE user_id = ?'
     const split = user_id.split("-");
     try {
-        if (events.includes(event_id)) {
+        //check for faculty events
+        if (fevents.includes(event_id)) {
+            if (split[0] === 'ay') {
+                const result = await conn.query(stmt1, user_id);
+                if (result[0]['col'] === 'faculty') {
+                    await conn.query(stmt, [user_id, event_id, 0, new Date()]);
+                    const reslt = await admin.messaging().subscribeToTopic(device_id, event_id);
+                    console.log(reslt);
+                    res.send(new Response().noError());
+                }
+                else res.send(new Response().withError(ERR_CODE.INVALID_EVE1));
+            }
+            else res.send(new Response().withError(ERR_CODE.INVALID_EVE));
+        }
+        //check for acharya events
+        else if (events.includes(event_id)) {
             if (split[0] === 'ay') {
                 await conn.query(stmt, [user_id, event_id, 0, new Date()]);
                 const result = await admin.messaging().subscribeToTopic(device_id, event_id)
@@ -218,7 +235,8 @@ router.post('/user/register', async (req, res) => {
             }
             else res.send(new Response().withError(ERR_CODE.INVALID_EVE));
         }
-        else if (!(event_id.includes(events))) {
+        //normal events
+        else if (!(events.includes(event_id))) {
             await conn.query(stmt, [user_id, event_id, 0, new Date()]);
             const result = await admin.messaging().subscribeToTopic(device_id, event_id)
             console.log(result);
@@ -525,15 +543,15 @@ router.post('/event_details', async (req, res) => {
 
     const { event_id } = req.body;
     const stmt = '' +
-        'SELECT U.name as u_name, U.phone_number as phone_number, U.college_name, U.department_name, U.email '+
-        'FROM USER as U, EVENT_REG as ER '+
-        'WHERE U.user_id = ER.user_id '+
+        'SELECT U.name as u_name, U.phone_number as phone_number, U.college_name, U.department_name, U.email ' +
+        'FROM USER as U, EVENT_REG as ER ' +
+        'WHERE U.user_id = ER.user_id ' +
         'AND ER.event_id = ?';
     const stmt1 = 'SELECT * FROM EVENT WHERE event_id = ?'
     try {
         const result = await conn.query(stmt, [event_id]);
         const result1 = await conn.query(stmt1, [event_id]);
-        res.render('../views/event_details.ejs', { event: result,event_name :result1 });
+        res.render('../views/event_details.ejs', { event: result, event_name: result1 });
     }
     catch (err) {
         console.log(err)
@@ -551,14 +569,14 @@ router.post('/list', async (req, res) => {
     const { college, dept } = req.body;
     const stmt = '' +
         'SELECT U.name,email,phone_number,college_name,department_name,E.name as e_name ' +
-        'FROM USER as U '+
+        'FROM USER as U ' +
         'INNER JOIN EVENT_REG as ER ' +
         'ON U.user_id = ER.user_id ' +
         'INNER JOIN EVENT as E ' +
         'ON E.event_id = ER.event_id ' +
         'WHERE U.user_id IN ' +
         '(SELECT ER.user_id ' +
-        'FROM EVENT_REG as ER) '+
+        'FROM EVENT_REG as ER) ' +
         'AND college_name = ? AND department_name = ?';
     try {
         const result = await conn.query(stmt, [college, dept]);
