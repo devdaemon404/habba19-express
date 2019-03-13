@@ -567,7 +567,7 @@ router.get('/list', async (req, res) => {
 router.post('/list', async (req, res) => {
 
     const { college, dept } = req.body;
-    const stmt = '' +
+    let stmt = '' +
         'SELECT U.name,email,phone_number,college_name,department_name,E.name as e_name ' +
         'FROM USER as U ' +
         'INNER JOIN EVENT_REG as ER ' +
@@ -577,10 +577,18 @@ router.post('/list', async (req, res) => {
         'WHERE U.user_id IN ' +
         '(SELECT ER.user_id ' +
         'FROM EVENT_REG as ER) ' +
-        'AND college_name = ? AND department_name = ?';
+        'AND college_name = ?';
+    if (dept !== '')
+        stmt = stmt + 'AND department_name = ?';
     try {
-        const result = await conn.query(stmt, [college, dept]);
-        res.render('../views/list.ejs', { event: result });
+        if (dept !== '') {
+            const result = await conn.query(stmt, [college, dept]);
+            res.render('../views/list.ejs', { event: result });
+        }
+        else {
+            const result1 = await conn.query(stmt, [college]);
+            res.render('../views/list.ejs', { event: result1 });
+        }
     }
     catch (err) {
         console.log(err)
