@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>List</title>
+</head>
+
+<body class='jumbotron'>
+    <div id="content" class="container">
+        <form action="sports_list" method="post">
+            <div class="form-group">
+                <select name="team" class="form-control" id="exampleSelect1">
+                    <option value="AI">AIGS Bulls</option>
+                    <option value="CV-CT-BT-ME">Mirage</option>
+                    <option value="IS-MC-CS">Brio </option>
+                    <option value="BA-EC-EE">Sparkle</option>
+                    <option value="MN-AE-MT-AU">Royal Kings </option>
+                    <option value="MP-BP">Rx Superlatives</option>
+                    <option value="RC">Blaze</option>
+                    <option value="DE">Paladins </option>
+                    <option value="DN-BN-LB-PG">Medalun</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit" name="submit" value="Submit">Submit</button>
+            <div class="table-responsive">
+                <div class="container" style="padding: 10px">
+                    <table class="table table-striped">
+                        <tr class="theaded-light">
+                            <% var event %>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone no</th>
+                            <th>College</th>
+                            <th>Department</th>
+                            <th>Event Name</th>
+                        </tr>
+                        <% if(event) { %>
+                        <% event.forEach((event, index) => { %>
+                        <tr>
+                            <td><%= event.name %></td>
+                            <td><%= event.email %></td>
+                            <td><%= event.phone_number %></td>
+                            <td><%= event.college_name %></td>
+                            <td><%= event.department_name %></td>
+                            <td><%= event.e_name %></td>
+                            
+                        </tr>
+                        <% }) %>
+                        <% } %>
+                    </table>
+                </div>
+        </form>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -596,5 +596,38 @@ router.post('/list', async (req, res) => {
     }
 
 });
+router.get('/sports_list', async (req, res) => {
+    res.render('../views/sports_list.ejs');
+
+});
+
+router.post('/sports_list', async (req, res) => {
+    const { team } = req.body;
+    const split = team.split('-');
+    const stmt = '' +
+        'SELECT U.name,email,phone_number,college_name,department_name,E.name as e_name ' +
+        'FROM USER as U ' +
+        'INNER JOIN EVENT_REG as ER ' +
+        'ON U.user_id = ER.user_id ' +
+        'INNER JOIN EVENT as E ' +
+        'ON E.event_id = ER.event_id ' +
+        'WHERE U.user_id IN ' +
+        '(SELECT ER.user_id ' +
+        'FROM EVENT_REG as ER) ' +
+        'AND ER.event_id IN (72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86) ' +
+        'AND department_name IN (?)';
+    try {
+
+        const result = await conn.query(stmt, [split]);
+        res.render('../views/sports_list.ejs', { event: result });
+    }
+    catch (err) {
+        console.log(err)
+        res.send(new Response().withError(ERR_CODE.DB_READ));
+    }
+
+});
+
+
 module.exports = router;
 
