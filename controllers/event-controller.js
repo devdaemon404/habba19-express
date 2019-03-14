@@ -604,7 +604,7 @@ router.get('/sports_list', async (req, res) => {
 router.post('/sports_list', async (req, res) => {
     const { team } = req.body;
     const split = team.split('-');
-    const stmt = '' +
+    let stmt = '' +
         'SELECT U.name,email,phone_number,college_name,department_name,E.name as e_name ' +
         'FROM USER as U ' +
         'INNER JOIN EVENT_REG as ER ' +
@@ -614,10 +614,21 @@ router.post('/sports_list', async (req, res) => {
         'WHERE U.user_id IN ' +
         '(SELECT ER.user_id ' +
         'FROM EVENT_REG as ER) ' +
-        'AND ER.event_id IN (72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86) ' +
-        'AND department_name IN (?)';
-    try {
+        'AND ER.event_id IN (72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86) ';
 
+    if (team === 'BA-AB-BC-BS-BF-MC-MP-MM-MA-MJ-MF') {
+        stmt = stmt + 'AND college_name IN (?)';
+    }
+    else if (team === 'BV-PG-DN-BN-PC') {
+        stmt = stmt + 'AND college_name IN (?)';
+    }
+    else if (team === 'DE') {
+        stmt = stmt + 'AND college_name IN (?)';
+    }
+    else {
+        stmt = stmt + 'AND department_name IN (?)';
+    }
+    try {
         const result = await conn.query(stmt, [split]);
         res.render('../views/sports_list.ejs', { event: result });
     }
