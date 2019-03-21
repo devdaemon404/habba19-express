@@ -335,14 +335,26 @@ router.get('/user/details', validator(eventValidator.userDetails), async (req, r
  * }
  * Register a notification for the event under the requesting organizer and getting his/her event's ID.
  */
+
+router.get('/organizer/auth', async (req, res) => {
+    res.render('../views/notif_cred.ejs');
+});
+
+router.post('/organizer/auth', async (req, res) => {
+    const { password } = req.body;
+    if (password === process.env.MASTER_PASSWORD) {
+        res.render('../views/event_notif.ejs');
+    }
+    else
+        res.send(new Response().withError(ERR_CODE.INVALID_PWD));
+});
+
 router.post('/notification', validator(eventValidator.notification), async (req, res) => {
     const {
         title,
-        message
-    } = req.body;
-    const {
+        message,
         organizer_id
-    } = req.headers;
+    } = req.body;
 
     const stmt1 = 'SELECT event_id ' +
         'FROM EVENT ' +
@@ -600,6 +612,7 @@ router.get('/sports_list', async (req, res) => {
     res.render('../views/sports_list.ejs');
 
 });
+
 
 router.post('/sports_list', async (req, res) => {
     const { team } = req.body;

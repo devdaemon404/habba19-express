@@ -40,9 +40,7 @@ module.exports = {
     notification: {
         body: {
             title: reqString,
-            message: reqString
-        },
-        headers: {
+            message: reqString,
             organizer_id: reqString
         }
     }
